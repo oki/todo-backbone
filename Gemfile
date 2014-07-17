@@ -42,3 +42,5 @@ gem 'grape'
 gem 'grape-entity'
 gem 'grape-swagger'
 gem 'grape-swagger-ui'
+
+gem 'pry-rails', group: :development
