@@ -1,5 +1,7 @@
 module API
   class Dispatch < Grape::API
+    helpers API::Helpers
+
     mount API::V1::Base
   end
 

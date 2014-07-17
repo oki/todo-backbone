@@ -63,7 +63,7 @@
 
   var app = {}; // create namespace for our app
   app.Todo = Backbone.Model.extend({
-    url: 'api/v1/todos',
+    urlRoot: 'api/v1/todos',
     defaults: {
       title: '',
       completed: false
