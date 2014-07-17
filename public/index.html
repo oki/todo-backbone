@@ -18,6 +18,9 @@
       text-shadow: 1px 1px 10px black;
       outline: none;
     }
+    label.completed {
+      text-decoration: line-through;
+    }
   </style>
 </head>
 <body>
@@ -50,7 +53,7 @@
   <script type="text/template" id="item-template">
    <div class="view">
      <input class="toggle" type="checkbox" <%= completed ? 'checked' : '' %>>
-     <label><%- title %></label>
+     <label class="<%= completed ? 'completed' : '' %>"><%- title %></label>
      <input class="edit" value="<%- title %>">
      <button class="destroy">remove</button>
    </div>
