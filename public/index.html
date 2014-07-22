@@ -21,6 +21,24 @@
     label.completed {
       text-decoration: line-through;
     }
+
+    .pace .pace-progress {
+      background: #29d;
+      position: fixed;
+      z-index: 2000;
+      top: 0;
+      left: 0;
+      height: 2px;
+
+      -webkit-transition: width 1s;
+      -moz-transition: width 1s;
+      -o-transition: width 1s;
+      transition: width 1s;
+    }
+
+    .pace-inactive {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -49,6 +67,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js" type="text/javascript"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js" type="text/javascript"></script>
+  <script src="/assets/pace.min.js" type="text/javascript"></script>
 
   <script type="text/template" id="item-template">
    <div class="view">
@@ -63,7 +82,6 @@
   <!-- Javascript code -->
   <!-- =============== -->
   <script type="text/javascript">
-
   var app = {}; // create namespace for our app
   app.Todo = Backbone.Model.extend({
     urlRoot: 'api/v1/todos',
@@ -87,7 +105,7 @@
     },
     remaining: function() {
       return this.without.apply( this, this.completed() );
-    }      
+    },
   });
   app.todoList = new app.TodoList();
 
@@ -144,6 +162,12 @@
         // when new elements are added to the collection render then with addOne
         app.todoList.on('add', this.addOne, this);
         app.todoList.on('reset', this.addAll, this);
+
+        // PACE - http://github.hubspot.com/pace/
+        app.todoList.on('request', this.paceStart, this);
+        app.todoList.on('sync', this.paceStop, this);
+        app.todoList.on('destroy', this.paceStop, this);
+
         app.todoList.fetch(); // Loads list from local storage
       },
       events: {
@@ -174,6 +198,7 @@
             _.each(app.todoList.completed(), this.addOne);
             break;            
           default:
+            console.log("Default");
             app.todoList.each(this.addOne, this);
             break;
         }
@@ -184,6 +209,12 @@
           title: this.input.val().trim(),
           completed: false
         }
+      },
+      paceStart: function() {
+        Pace.start();
+      },
+      paceStop: function() {
+        Pace.stop();
       }
     });
 
@@ -196,6 +227,8 @@
 
         if (params) {
           window.filter = params.trim() || '';
+        } else {
+          window.filter = '';
         }
         app.todoList.trigger('reset');
       }
